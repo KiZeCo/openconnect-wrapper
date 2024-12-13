@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
 /// <summary>
 ///   A helper class that writes the vpnc script to disk, and does its best to
@@ -11,7 +11,7 @@ namespace ConnectToUrl;
 ///   will also try and cleanup previous executions that may have crashed and
 ///   left an orphan vpnc script file.
 /// </summary>
-internal class VpnScript : DisposableAction {
+public class VpnScript : DisposableAction {
     public String ScriptPath { get; }
 
     public VpnScript(String scriptPath, Action action) : base(action) {
@@ -120,7 +120,7 @@ internal class VpnScript : DisposableAction {
     [SupportedOSPlatform("Windows")]
     [SupportedOSPlatform("OSX")]
     private static String GetVpncScriptContent() {
-        var assembly = typeof(Program).Assembly;
+        var assembly = typeof(VpnScript).Assembly;
         String resourceName;
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {

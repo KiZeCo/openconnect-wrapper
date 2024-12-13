@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
-internal interface ICredentialManager {
+public interface ICredentialManager {
     public IVpnCredentials? AskForCredentials(String url, String messageText);
     public IVpnCredentials? ForceAskForCredentials(String url, String messageText);
 }

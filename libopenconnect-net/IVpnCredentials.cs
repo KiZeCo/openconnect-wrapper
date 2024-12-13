@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
-internal interface IVpnCredentials {
+public interface IVpnCredentials {
     String Username { get; }
     String Password { get; }
     void Fail();

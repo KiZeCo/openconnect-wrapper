@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace ConnectToUrl.Windows;
+namespace libopenconnect.Windows;
 
 [SupportedOSPlatform("Windows")]
 internal static class Winsock2 {

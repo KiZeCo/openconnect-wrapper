@@ -94,7 +94,6 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'webview|win-x64' ">
@@ -110,32 +109,18 @@
         <Compile Include="*.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Remove="vpnc-script-win.js" />
-        <EmbeddedResource Include="vpnc-script-win.js" />
-
-        <None Remove="vpnc-script-osx.sh" />
-        <EmbeddedResource Include="vpnc-script-osx.sh" />
-    </ItemGroup>
-
     <ItemGroup Condition=" '$(Platform)' == 'win-x64' ">
         <Compile Include="Windows\*.cs" />
 
         <None Include="Windows\Microsoft.AspNetCore.Components.Web.rd.xml" />
         <RdXmlFile Include="Windows\Microsoft.AspNetCore.Components.Web.rd.xml" />
-        
-        <None Remove="Windows\libnative.x64.dll" />
-        <Content Include="Windows\libnative.x64.dll">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Platform)' == 'osx-x64' ">
         <Compile Include="OSX\*.cs" />
-      
-        <None Remove="OSX\libnative.x64.dylib" />
-        <Content Include="OSX\libnative.x64.dylib">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\libopenconnect-net\libopenconnect-net.csproj" />
     </ItemGroup>
 </Project>

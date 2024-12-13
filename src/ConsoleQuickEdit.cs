@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using ConnectToUrl;
+using libopenconnect;
 
 internal static class ConsoleQuickEdit {
     // This flag enables the user to use the mouse to select and edit text.

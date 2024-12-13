@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
-using static OpenConnect;
+using libopenconnect;
+using static libopenconnect.OpenConnect;
 
 namespace ConnectToUrl.Windows;
 

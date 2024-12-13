@@ -4,16 +4,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using static OpenConnect;
+using static libopenconnect.OpenConnect;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
 /// <summary>
 ///   This class handles the interaction with the different openconnect_*
 ///   native method calls. This includes creating and configuring the
 ///   connection, and handle authentication.
 /// </summary>
-internal unsafe class Connection {
+public unsafe class Connection {
     private const Int32 SUCCESS = 0;
     private const Int32 FAILURE = 1;
 
@@ -40,7 +40,7 @@ internal unsafe class Connection {
     private Boolean _isFirstAuthAttempt = true;
     private IVpnCredentials? _currentCredentials;
 
-    internal Connection() {
+    public Connection() {
         _loopThread = new Thread(MainLoop);
 
         ProcessAuthFormDelegate = ProcessAuthForm;
@@ -58,7 +58,7 @@ internal unsafe class Connection {
         public openconnect_info* vpninfo;
     }
 
-    internal Int32 Connect() {
+    public Int32 Connect() {
         if (Url == null) {
             Console.Error.WriteLine("No Url specified.");
             return FAILURE;
@@ -480,7 +480,7 @@ internal unsafe class Connection {
     }
 
     private void MainLoop() {
-        using (ConsoleTitle.Change($"VPN: {Url}")) {
+        using (Platform.ChangeConsoleTitle($"VPN: {Url}")) {
             var mainloopResult = openconnect_mainloop(_state->vpninfo, 30, RECONNECT_INTERVAL_MIN);
             switch (mainloopResult) {
                 case 0:

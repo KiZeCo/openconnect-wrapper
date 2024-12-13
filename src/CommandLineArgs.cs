@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommandLine;
+using libopenconnect;
 
 namespace ConnectToUrl;
 

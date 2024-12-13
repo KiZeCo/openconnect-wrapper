@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.Principal;
 
-namespace ConnectToUrl.Windows;
+namespace libopenconnect.Windows;
 
 [SupportedOSPlatform("Windows")]
 internal class WindowsFunctionality : IOSFunctionality {

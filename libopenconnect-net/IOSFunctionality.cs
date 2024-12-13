@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
-internal unsafe delegate void Logger(void* privdata, Int32 level, Char* formatted);
+public unsafe delegate void Logger(void* privdata, Int32 level, Char* formatted);
 
-internal unsafe interface IOSFunctionality {
+public unsafe interface IOSFunctionality {
     Boolean Init() {
         return true;
     }

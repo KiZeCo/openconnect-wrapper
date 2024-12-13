@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace ConnectToUrl;
+namespace libopenconnect;
 
-internal static class Helper {
+public static class Helper {
     public static unsafe T* AllocHGlobal<T>() where T : unmanaged {
         var ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(T)));
         Marshal.StructureToPtr(new T(), ptr, false);

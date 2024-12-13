@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
+using libopenconnect;
 
 namespace ConnectToUrl;
 
@@ -14,8 +14,6 @@ internal static class Program {
             Console.Error.WriteLine("Failed to parse command line arguments.");
             return FailWithExitCode(FAILURE);
         }
-
-        NativeLibrary.SetDllImportResolver(typeof(Program).Assembly, ResolveLibrary);
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
             /* allow */
@@ -63,23 +61,6 @@ internal static class Program {
 
             return SUCCESS;
         }
-    }
-
-    private static IntPtr ResolveLibrary(String libraryName, Assembly assembly, DllImportSearchPath? searchPath) {
-        if (libraryName == OpenConnect.DllName && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-            if (NativeLibrary.TryLoad(OpenConnect.WindowsDllName, assembly, searchPath, out var handle)) {
-                return handle;
-            }
-        }
-
-        {
-            if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out var handle)) {
-                return handle;
-            }
-        }
-
-        Console.Error.WriteLine($"Resolver: Failed to resolve library '{libraryName}'");
-        return IntPtr.Zero;
     }
 
     private static Int32 FailWithExitCode(Int32 exitCode) {

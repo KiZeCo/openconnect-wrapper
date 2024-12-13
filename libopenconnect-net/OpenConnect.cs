@@ -1,11 +1,33 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using ConnectToUrl;
 
-internal abstract unsafe class OpenConnect {
+namespace libopenconnect;
+
+public abstract unsafe class OpenConnect {
     internal const String DllName = "openconnect";
     internal const String WindowsDllName = "libopenconnect-5";
+
+    static OpenConnect() {
+        NativeLibrary.SetDllImportResolver(typeof(OpenConnect).Assembly, ResolveLibrary);
+    }
+
+    private static IntPtr ResolveLibrary(String libraryName, System.Reflection.Assembly assembly, DllImportSearchPath? searchPath) {
+        if (libraryName == DllName && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            if (NativeLibrary.TryLoad(WindowsDllName, assembly, searchPath, out var handle)) {
+                return handle;
+            }
+        }
+
+        {
+            if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out var handle)) {
+                return handle;
+            }
+        }
+
+        Console.Error.WriteLine($"Resolver: Failed to resolve library '{libraryName}'");
+        return IntPtr.Zero;
+    }
 
     public const Int32 EAGAIN = 11;
     public const Int32 EINVAL = 22;

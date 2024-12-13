@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
+using libopenconnect;
 
 namespace ConnectToUrl.Windows;
 
@@ -29,7 +30,7 @@ internal class WindowsCredentialManager : ICredentialManager {
     }
 
     [Flags]
-    private enum CREDUI_FLAGS : uint {
+    private enum CREDUI_FLAGS : UInt32 {
         CREDUI_FLAGS_INCORRECT_PASSWORD = 0x00001,
         CREDUI_FLAGS_DO_NOT_PERSIST = 0x00002,
         CREDUI_FLAGS_REQUEST_ADMINISTRATOR = 0x00004,
