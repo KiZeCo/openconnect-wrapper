@@ -3,12 +3,39 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using ConnectToUrl;
 
-internal abstract unsafe class OpenConnect {
+internal abstract unsafe partial class OpenConnect {
     internal const String DllName = "openconnect";
     internal const String WindowsDllName = "libopenconnect-5";
 
     public const Int32 EAGAIN = 11;
     public const Int32 EINVAL = 22;
+
+    /// <summary>Enumeration of supported VPN protocols</summary>
+    [Flags]
+    [SourceReference("openconnect.h", 201, 208)]
+    public enum OC_PROTO_FLAGS : UInt32 {
+        PROXY = 1<<0, // OC_PROTO_PROXY
+        CSD = 1<<1, // OC_PROTO_CSD
+        AUTH_CERT = 1<<2, // OC_PROTO_AUTH_CERT
+        AUTH_OTP = 1<<3, // OC_PROTO_AUTH_OTP
+        AUTH_STOKEN = 1<<4, // OC_PROTO_AUTH_STOKEN
+        PERIODIC_TROJAN = 1<<5, // OC_PROTO_PERIODIC_TROJAN
+        HIDDEN = 1<<6, // OC_PROTO_HIDDEN
+        AUTH_MCA = 1<<7, // OC_PROTO_AUTH_MCA
+    }
+
+    [SourceReference("openconnect.h", 210, 215)]
+    [StructLayout(LayoutKind.Sequential)]
+    public struct oc_vpn_proto {
+        [SourceType("const char*")]
+        public Char* name;
+        [SourceType("const char*")]
+        public Char* pretty_name;
+        [SourceType("const char*")]
+        public Char* description;
+        [SourceType("unsigned int")]
+        public OC_PROTO_FLAGS flags;
+    };
 
     [SourceReference("openconnect.h", 218, 224)]
     public enum OC_FORM_OPT_TYPE {
@@ -489,6 +516,29 @@ internal abstract unsafe class OpenConnect {
         oc_webview_result* result
     );
 
+    /// <summary>Query and select from among supported protocols</summary>
+    [SourceReference("openconnect.h", 823)]
+    [LibraryImport(DllName)]
+    public static partial Int32 openconnect_get_supported_protocols(oc_vpn_proto ** protos);
+    [SourceReference("openconnect.h", 824)]
+    [LibraryImport(DllName)]
+    public static partial void openconnect_free_supported_protocols(oc_vpn_proto * protos);
+
+    //[SourceType("const char*")]
+    [SourceReference("openconnect.h", 825)]
+    [LibraryImport(DllName, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial String openconnect_get_protocol(openconnect_info* vpninfo);
+
+    [SourceReference("openconnect.h", 826)]
+    [DllImport(DllName, EntryPoint = "openconnect_set_protocol")]
+    public static extern Int32 openconnect_set_protocol(
+        openconnect_info* vpninfo,
+
+        [SourceType("const char*")]
+        [MarshalAs(UnmanagedType.LPStr)]
+        String protocol
+    );
+
     /// <summary>
     ///   Callback for configuring the interface after tunnel is fully up.
     /// </summary>
@@ -502,15 +552,5 @@ internal abstract unsafe class OpenConnect {
     public static extern void openconnect_set_setup_tun_handler(
         openconnect_info* vpninfo,
         openconnect_setup_tun_vfn setup_tun
-    );
-
-    [SourceReference("openconnect.h", 821)]
-    [DllImport(DllName, EntryPoint = "openconnect_set_protocol")]
-    public static extern Int32 openconnect_set_protocol(
-        openconnect_info* vpninfo,
-
-        [SourceType("const char*")]
-        [MarshalAs(UnmanagedType.LPStr)]
-        String protocol
     );
 }

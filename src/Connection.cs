@@ -48,6 +48,7 @@ internal unsafe class Connection {
         ProgressDelegate = Platform.OSFunctionality.CreateOpenConnectLogger(ProgressCallback);
     }
 
+    public required String SelectedProtocol { get; init; }
     public String? Url { get; init; }
     public Int32 MinLoggingLevel { get; init; }
     public String? ScriptPath { get; init; }
@@ -58,7 +59,34 @@ internal unsafe class Connection {
         public openconnect_info* vpninfo;
     }
 
+    public static List<VpnProtocol> GetSupportedProtocols() {
+        var l = new List<VpnProtocol>();
+        oc_vpn_proto* protos = null;
+        if (openconnect_get_supported_protocols(&protos) >= 0) {
+            for (var p = protos; p->name != null; ++p) {
+                l.Add(new(
+                    Helper.PtrToStringAnsi(p->name) ?? "",
+                    Helper.PtrToStringAnsi(p->pretty_name) ?? "",
+                    Helper.PtrToStringAnsi(p->description) ?? "",
+                    p->flags));
+            }
+            openconnect_free_supported_protocols(protos);
+        }
+        return l;
+    }
+
     internal Int32 Connect() {
+        var protos = GetSupportedProtocols();
+        Console.WriteLine("Supported protocols:");
+        foreach (var proto in protos) {
+            var match = proto.Name == SelectedProtocol;
+            Console.WriteLine($"{(match ? '*' : '-')} {proto}");
+        }
+        if (!protos.Any(p => p.Name == SelectedProtocol)) {
+            Console.Error.WriteLine($"Protocol {SelectedProtocol} not supported.");
+            return FAILURE;
+        }
+
         if (Url == null) {
             Console.Error.WriteLine("No Url specified.");
             return FAILURE;
@@ -113,7 +141,7 @@ internal unsafe class Connection {
             return FAILURE;
         }
 
-        var setProtoResult = openconnect_set_protocol(vpninfo, "anyconnect");
+        var setProtoResult = openconnect_set_protocol(vpninfo, SelectedProtocol);
         if (setProtoResult != 0) {
             Console.Error.WriteLine($"openconnect_set_protocol returned error {setProtoResult}");
             goto failure;
