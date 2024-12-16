@@ -352,7 +352,11 @@ internal unsafe class Connection {
             ocField = ocField->next;
         }
 
-        if (formFields.ContainsKey("username") && formFields.ContainsKey("password")) {
+        var passwordFieldName = "password";
+        if (formFields.ContainsKey("credential") && !formFields.ContainsKey(passwordFieldName)) {
+            passwordFieldName = "credential";
+        }
+        if (formFields.ContainsKey("username") && formFields.ContainsKey(passwordFieldName)) {
             BoxContent("Auth: Detected both username and password field.");
 
             var messageText = String.IsNullOrWhiteSpace(formMessage)
@@ -389,7 +393,7 @@ internal unsafe class Connection {
             }
 
             newValues["username"] = _currentCredentials.Username;
-            newValues["password"] = _currentCredentials.Password;
+            newValues[passwordFieldName] = _currentCredentials.Password;
         }
 
         noCredentialManager:
