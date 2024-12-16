@@ -23,6 +23,11 @@ internal class CommandLineArgs {
     [Option("protocol", HelpText = "name of VPN protocol, see list")]
     public String SelectedProtocol { get; set; } = "anyconnect";
 
+    [Option('c', "certificate", HelpText = "Path to Client Certificate or PKCS#11 URI")]
+    public String? CertFile { get; set; }
+    [Option('k', "sslkey", HelpText = "Path to Key of Client Certificate, defaults to")]
+    public String? KeyFile { get; set; }
+
     [Option("secondary-password", HelpText = "Secondary password to auto-fill for the first connection attempt.")]
     public String? SecondaryPassword { get; set; }
 

@@ -49,6 +49,9 @@ internal unsafe class Connection {
     }
 
     public required String SelectedProtocol { get; init; }
+    /// <summary>Path to a client certificate, or URI such as system:win:id=xxxx</summary>
+    public required String? CertFile { get; init; }
+    public required String? KeyFile { get; init; }
     public String? Url { get; init; }
     public Int32 MinLoggingLevel { get; init; }
     public String? ScriptPath { get; init; }
@@ -154,6 +157,12 @@ internal unsafe class Connection {
 
         // Enable perfect forward secrecy.
         openconnect_set_pfs(vpninfo, 1);
+
+        var certFile = CertFile;
+        var keyFile = String.IsNullOrEmpty(KeyFile) ? certFile : KeyFile;
+        if (!String.IsNullOrEmpty(certFile)) {
+            openconnect_set_client_cert(vpninfo, certFile, keyFile);
+        }
 
         var parseUrlResult = openconnect_parse_url(vpninfo, Url);
         if (parseUrlResult != 0) {

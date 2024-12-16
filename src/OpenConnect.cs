@@ -297,6 +297,31 @@ internal abstract unsafe partial class OpenConnect {
         String os
     );
 
+    /// <param name="cert">Filename of certificate (temporary file)</param>
+    /// <param name="sslkey">Filname of cert key (temporary file)</param>
+    [SourceReference("openconnect.h", 641)]
+    [LibraryImport(DllName)]
+    public static partial Int32 openconnect_set_client_cert(
+        openconnect_info *param0,
+
+        [SourceType("const char*")]
+        [MarshalAs(UnmanagedType.LPStr)]
+        String? cert,
+        [SourceType("const char*")]
+        [MarshalAs(UnmanagedType.LPStr)]
+        String? sslkey
+    );
+
+    [SourceReference("openconnect.h", 643)]
+    [LibraryImport(DllName)]
+    public static partial Int32 openconnect_set_key_password(
+        openconnect_info *vpninfo,
+
+        [SourceType("const char*")]
+        [MarshalAs(UnmanagedType.LPStr)]
+        String pass
+    );
+
     /// <summary>
     ///   The returned structures are owned by the library and may be freed/replaced
     ///   due to rekey or reconnect. Assume that once the mainloop starts, the

@@ -52,6 +52,8 @@ internal static class Program {
             Console.WriteLine($"Using vpnc script at {vpncScript.ScriptPath}");
             var connection = new Connection {
                 SelectedProtocol = parsedArgs.SelectedProtocol,
+                CertFile = parsedArgs.CertFile,
+                KeyFile = parsedArgs.KeyFile,
                 Url = parsedArgs.Url,
                 MinLoggingLevel = (Int32)parsedArgs.LogLevel,
                 ScriptPath = vpncScript.ScriptPath,
